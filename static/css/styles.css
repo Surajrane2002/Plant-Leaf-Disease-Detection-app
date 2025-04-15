@@ -1,0 +1,59 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Background */
+body, html {
+  height: 100%;
+  font-family: 'Segoe UI', sans-serif;
+  background: url('/static/image/background.jpeg') no-repeat center center fixed;
+
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Centered card */
+.center-box {
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  padding: 40px 50px;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  max-width: 500px;
+  width: 90%;
+  text-align: center;
+}
+
+.center-box input,
+.center-box button {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 8px;
+  border: none;
+}
+
+.center-box button {
+  background-color: #28a745;
+  color: white;
+  cursor: pointer;
+}
+
+.center-box button:hover {
+  background-color: #218838;
+}
+
+.center-box a {
+  color: #aaffaa;
+  text-decoration: none;
+}
+
+.center-box a:hover {
+  text-decoration: underline;
+}

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Prediction</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+  <div class="center-box">
+    <h2>Predict Disease</h2>
+    <form action="/predict/api/predict" method="POST" enctype="multipart/form-data">
+
+      <label>Plant Type:</label>
+      
+      <select name="plant_type" required>
+        <option value="">-- Select Crop --</option>
+        <option value="apple">Apple</option>
+        <option value="blueberry">Blueberry</option>
+        <option value="cherry">Cherry</option>
+        <option value="corn">Corn</option>
+        <option value="grape">Grape</option>
+        <option value="orange">Orange</option>
+        <option value="peach">Peach</option>
+        <option value="pepper">Pepper</option>
+        <option value="potato">Potato</option>
+        <option value="raspberry">Raspberry</option>
+        <option value="soybean">Soybean</option>
+        <option value="squash">Squash</option>
+        <option value="strawberry">Strawberry</option>
+        <option value="tomato">Tomato</option>
+      </select><br>
+
+      <label>Image:</label>
+      <input type="file" name="image" accept="image/*" required><br>
+
+      <label>Location/Region:</label>
+      <input type="text" name="location" required><br>
+
+      <label>Date of Observation:</label>
+      <input type="date" name="date" required><br>
+
+      <button type="submit">Submit</button>
+    </form>
+  </div>
+</body>
+<script src="/static/script.js"></script>
+</html>

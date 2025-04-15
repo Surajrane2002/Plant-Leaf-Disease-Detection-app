@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+
+
+</head>
+<body>
+  <div class="center-box">
+
+    <h2>Login</h2>
+
+    <!-- ✅ Signup success message -->
+    {% if request.args.get('message') %}
+      <p style="color: green;">{{ request.args.get('message') }}</p>
+    {% endif %}
+
+    <!-- ❌ Invalid login message -->
+    {% if message %}
+      <p style="color: red;">{{ message }}</p>
+    {% endif %}
+
+    <form action="/login" method="POST">
+      <input type="text" name="username" placeholder="Email or Username" required>
+      <input type="password" name="password" placeholder="Password" required>
+      <button type="submit">Login</button>
+    </form>
+    <p>
+      <a href="/signup">Sign Up</a> | 
+      <a href="/forgot-password">Forgot Password?</a>
+    </p>
+  </div>
+  <script src="/static/script.js"></script>
+</body>
+</html>

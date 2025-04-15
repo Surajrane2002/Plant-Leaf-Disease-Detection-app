@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Prediction Result</title>
+  <link rel="stylesheet" href="static/css/styles.css">
+</head>
+<body>
+  <div class="center-box">
+    <h2>Prediction Result</h2>
+    <p><strong>Crop:</strong> <span id="cropType"></span></p>
+    <p><strong>Disease:</strong> <span id="disease"></span></p>
+    <p><strong>Confidence:</strong> <span id="confidence"></span></p>
+
+    <br>
+    <a href="prediction.html"><button>Predict Another</button></a>
+    <a href="index.html"><button>Home</button></a>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const result = JSON.parse(localStorage.getItem("predictionResult"));
+      if (result) {
+        document.getElementById("cropType").textContent = result.crop_type || "N/A";
+        document.getElementById("disease").textContent = result.disease || "N/A";
+        document.getElementById("confidence").textContent = (result.confidence * 100).toFixed(2) + "%";
+      } else {
+        document.querySelector(".center-box").innerHTML = "<h2>No prediction result found.</h2><a href='prediction.html'><button>Go Back</button></a>";
+      }
+    });
+  </script>
+</body>
+</html>

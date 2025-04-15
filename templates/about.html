@@ -1,0 +1,83 @@
+<!-- templates/about.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>About - Crop Plant Disease Prediction</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f2f7f5;
+            margin: 0;
+            padding: 0;
+        }
+        .about-container {
+            max-width: 900px;
+            margin: 40px auto;
+            background-color: #ffffff;
+            padding: 30px 40px;
+            border-radius: 16px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2 {
+            color: #2e7d32;
+        }
+        p, li {
+            color: #333333;
+            font-size: 16px;
+            line-height: 1.7;
+        }
+        ul {
+            margin-top: 10px;
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="about-container">
+        <h1>About This Project</h1>
+        <p>
+            In the farm, there are many types of crops and fruits, and many of them are infected during different seasons.
+            These infections are mostly caused by insects. The goal of our Plant Disease Prediction project is to
+            identify these plant infections early and help save crops from loss.
+        </p>
+
+        <ul>
+            <li>
+                Plants attacked by insects are often unable to produce crops or fruits. If not addressed,
+                the infection can spread to other plants, leading to widespread damage across the farm.
+            </li>
+            <li>
+                Farmers face major losses due to reduced crop yields when their plants are unhealthy or infected.
+                On the other hand, healthy crops grow better and produce more, increasing the farmer’s income.
+            </li>
+            <li>
+                Early identification of diseases helps farmers prevent the spread of infection throughout their farm.
+            </li>
+            <li>
+                To prevent financial loss and improve productivity, we propose using a smart plant disease
+                identification system.
+            </li>
+            <li>
+                Our system quickly detects infected plants from leaf images, enabling farmers to take quick
+                action before the disease spreads further.
+            </li>
+        </ul>
+
+        <h2>Goals of the Project</h2>
+        <ul>
+            <li>Identify plant diseases early using image-based prediction</li>
+            <li>Reduce crop losses and financial burden on farmers</li>
+            <li>Improve yield and productivity through timely intervention</li>
+            <li>Leverage technology for smarter farming solutions</li>
+        </ul>
+
+       
+
+        <h2>Contributors</h2>
+        <p>[Your Name], [Team Members], guided by [Mentor/Faculty Name]</p>
+    </div>
+</body>
+</html>
