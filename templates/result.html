@@ -1,30 +1,74 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Prediction Result</title>
-  <link rel="stylesheet" href="static/css/styles.css">
+  <meta charset="UTF-8">
+  <title>Prediction Result - Plant Disease Detection</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
-  <div class="center-box">
-    <h2>Prediction Result</h2>
-    <p><strong>Crop:</strong> <span id="cropType"></span></p>
-    <p><strong>Disease:</strong> <span id="disease"></span></p>
-    <p><strong>Confidence:</strong> <span id="confidence"></span></p>
+  <div class="container">
+    <!-- Left side with background image -->
+    <div class="left-section"></div>
 
-    <br>
-    <a href="prediction.html"><button>Predict Another</button></a>
-    <a href="index.html"><button>Home</button></a>
+    <!-- Right side with result display -->
+    <div class="right-section">
+      <div class="form-box"> <!-- Changed from result-box to form-box for consistency -->
+        <h2>Prediction Result</h2>
+
+        <!-- Result Fields -->
+        <p id="cropLine"><strong>Crop:</strong> <span id="cropType"></span></p>
+        <p id="diseaseLine"><strong>Disease:</strong> <span id="disease"></span></p>
+        <p id="confidenceLine"><strong>Confidence:</strong> <span id="confidence"></span></p>
+
+        <!-- Image Preview -->
+        <img id="previewImage" alt="Uploaded Leaf Image" style="max-width: 300px; display: none; margin: 20px auto; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.3);">
+
+        <!-- Error Message -->
+        <p id="error-message" style="color: red; font-weight: bold;"></p>
+
+        <br>
+        <a href="{{ url_for('prediction') }}"><button>Predict Another</button></a>
+        <a href="{{ url_for('index') }}"><button>Home</button></a>
+      </div>
+    </div>
   </div>
 
   <script>
     document.addEventListener("DOMContentLoaded", function () {
-      const result = JSON.parse(localStorage.getItem("predictionResult"));
+      const result = JSON.parse(sessionStorage.getItem("prediction_result"));
+      const imageBase64 = sessionStorage.getItem("uploadedImage");
+
+      const cropLine = document.getElementById("cropLine");
+      const diseaseLine = document.getElementById("diseaseLine");
+      const confidenceLine = document.getElementById("confidenceLine");
+      const errorMsg = document.getElementById("error-message");
+      const previewImage = document.getElementById("previewImage");
+
+      // If prediction result exists
       if (result) {
-        document.getElementById("cropType").textContent = result.crop_type || "N/A";
-        document.getElementById("disease").textContent = result.disease || "N/A";
-        document.getElementById("confidence").textContent = (result.confidence * 100).toFixed(2) + "%";
+        if (result.crop && result.disease && result.confidence !== undefined) {
+          document.getElementById("cropType").textContent = result.crop;
+          document.getElementById("disease").textContent = result.disease;
+          document.getElementById("confidence").textContent = result.confidence + "%";
+
+          // Show uploaded image if available
+          if (imageBase64) {
+            previewImage.src = imageBase64;  // Set the base64 string as image source
+            previewImage.style.display = "block";  // Make the image visible
+          }
+        } else if (result.message) {
+          cropLine.style.display = "none";
+          diseaseLine.style.display = "none";
+          confidenceLine.style.display = "none";
+          errorMsg.textContent = result.message;
+        } else {
+          errorMsg.textContent = "Unexpected result format. Please try again.";
+        }
       } else {
-        document.querySelector(".center-box").innerHTML = "<h2>No prediction result found.</h2><a href='prediction.html'><button>Go Back</button></a>";
+        cropLine.style.display = "none";
+        diseaseLine.style.display = "none";
+        confidenceLine.style.display = "none";
+        errorMsg.textContent = "No prediction result found.";
       }
     });
   </script>

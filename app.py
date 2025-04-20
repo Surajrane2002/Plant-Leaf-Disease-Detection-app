@@ -1,13 +1,13 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
-from flaskext.mysql import MySQL
 from flask_mail import Mail, Message
+from flask_sqlalchemy import SQLAlchemy  # Use SQLAlchemy for database
 from routes.predict import predict_blueprint
 from routes.auth import auth
 from routes.api import api
-from database import get_db_connection
 from config import MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DB, MYSQL_PORT
 import hashlib
 import random
+import mysql.connector
 
 # Initialize Flask app
 app = Flask(__name__, static_folder="static", template_folder="templates")
@@ -31,10 +31,16 @@ app.config['MAIL_DEFAULT_SENDER'] = 'your_email@gmail.com'   # 🔁 Change this
 
 mail = Mail(app)
 
-# Initialize MySQL
-mysql = MySQL()
-mysql.init_app(app)
-app.mysql = mysql
+# Function to get a database connection
+def get_db_connection():
+    conn = mysql.connector.connect(
+        host=MYSQL_HOST,
+        user=MYSQL_USER,
+        password=MYSQL_PASSWORD,
+        database=MYSQL_DB,
+        port=MYSQL_PORT
+    )
+    return conn
 
 # Register Blueprints
 app.register_blueprint(predict_blueprint, url_prefix="/predict")
@@ -168,20 +174,6 @@ def result():
 def about():
     return render_template('about.html')
 
-# Initialize MySQL
-def initialize_database():
-    try:
-        connection = get_db_connection()
-        cursor = connection.cursor()
-        db_name = app.config["MYSQL_DB"]
-        cursor.execute(f"USE {db_name};")
-        cursor.close()
-        connection.close()
-        print("✅ Database initialized successfully.")
-    except Exception as e:
-        print(f"❌ Database initialization failed: {e}")
-
 # Run the app
 if __name__ == "__main__":
-    initialize_database()
     app.run(debug=True)

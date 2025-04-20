@@ -4,18 +4,27 @@
     <meta charset="UTF-8">
     <title>Home - Plant Disease Detection</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-
 </head>
 <body>
-    <div class="center-box">
-    
-        <h1>🌱 Welcome to Plant Disease Detection!</h1>
+    <div class="container">
+        <!-- Left side with background image -->
+        <div class="left-section"></div>
 
-        <div class="nav-buttons">
-            <a href="{{ url_for('prediction') }}">Start Prediction</a><br>
-           
-            <a href="{{ url_for('about') }}">About</a><br>
+        <!-- Right side with content -->
+        <div class="right-section">
+            <div class="home-box">
+                <h1>🌱 Welcome to Plant Disease Detection!</h1>
+
+                <p class="home-message">Start your journey by predicting the diseases of your plants!</p>
+
+                <div class="nav-buttons">
+                    <a href="{{ url_for('prediction') }}">Start Prediction</a><br>
+                    <a href="{{ url_for('about') }}">About</a><br>
+                </div>
+            </div>
         </div>
     </div>
+
+    <script src="/static/script.js"></script>
 </body>
 </html>

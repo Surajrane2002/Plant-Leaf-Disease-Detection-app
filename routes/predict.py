@@ -1,12 +1,13 @@
-from flask import Blueprint, request, jsonify
+from PIL import Image
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras.preprocessing import image
 import os
 import uuid
 from werkzeug.utils import secure_filename
+from flask import Blueprint, logging, request, jsonify
 from database import get_db_connection
 from config import CLASS_LABELS
+import logging
 
 predict_blueprint = Blueprint("predict", __name__)
 
@@ -24,14 +25,27 @@ except Exception as e:
     print(f"❌ Error loading model: {e}")
     model = None
 
-# ✅ Preprocess function
+# ✅ Image Validation (size and aspect ratio check)
+def validate_image(img_path):
+    try:
+        with Image.open(img_path) as img:
+            # Check if image is too small
+            if img.size[0] < 100 or img.size[1] < 100:
+                return False, "Image too small"
+            # Check aspect ratio (reasonable for plant images)
+            if img.size[0] / img.size[1] < 0.5 or img.size[0] / img.size[1] > 2:
+                return False, "Invalid aspect ratio. Please upload a clear plant image."
+            return True, None
+    except Exception as e:
+        return False, f"Error validating image: {str(e)}"
+
+# ✅ Preprocessing function
 def preprocess_image(img_path):
-    img = image.load_img(img_path, target_size=(128, 128))
-    img_array = image.img_to_array(img)
+    img = Image.open(img_path).resize((128, 128))
+    img_array = np.array(img)
     return np.expand_dims(img_array, axis=0)
 
-
-# ✅ PREDICTION ROUTE
+# ✅ Prediction Route
 @predict_blueprint.route("/api/predict", methods=["POST"])
 def predict():
     try:
@@ -45,12 +59,18 @@ def predict():
         if file.filename == "":
             return jsonify({"message": "Empty filename"}), 400
 
-        # ✅ Save file securely
+        # Save file securely
         filename = secure_filename(file.filename)
         temp_filename = os.path.join(UPLOAD_FOLDER, f"{uuid.uuid4().hex}_{filename}")
         file.save(temp_filename)
 
-        # ✅ Run model prediction
+        # ✅ Validate Image
+        is_valid, error_message = validate_image(temp_filename)
+        if not is_valid:
+            os.remove(temp_filename)  # Remove invalid image
+            return jsonify({"message": f"Invalid image: {error_message}"}), 400
+
+        # ✅ Run Model Prediction
         img_array = preprocess_image(temp_filename)
         prediction = model.predict(img_array)
         predicted_class = int(np.argmax(prediction, axis=1)[0])
@@ -61,7 +81,7 @@ def predict():
         crop = label["crop"]
         disease = label["disease"]
 
-        # ✅ Save to database
+        # ✅ Save Prediction to Database
         connection = get_db_connection()
         cursor = connection.cursor()
         cursor.execute(
@@ -72,10 +92,10 @@ def predict():
         cursor.close()
         connection.close()
 
-        # ✅ Optionally delete image
+        # ✅ Optionally delete image after processing
         os.remove(temp_filename)
 
-        # ✅ Return result in frontend-friendly format
+        # ✅ Return result to the frontend
         return jsonify({
             "crop": crop,
             "disease": disease,
@@ -83,4 +103,8 @@ def predict():
         }), 200
 
     except Exception as e:
-        return jsonify({"message": f"Prediction error: {str(e)}"}), 500
+    # Log the actual error for debugging
+     logging.error(f"Prediction error: {str(e)}")
+
+    # Send a friendly error message to frontend
+    return jsonify({"message": "Invalid image. Please upload a clear plant leaf image in JPG or PNG format."}), 400
